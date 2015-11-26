@@ -22,7 +22,8 @@ func subscribe(w http.ResponseWriter, req *http.Request) {
 			response := "SUBSCRIPTION ACCEPTED FOR VERIFICATION"
 			out,_ :=json.MarshalIndent(response, "202", "    ")
 			w.Write([]byte(out))
-			http.Get("http://"+ req.PostFormValue("callback") +"/verify?topic=" + req.PostFormValue("topic") +"&challenge=" + random)
+			//sinatra subscriber server running at port 4567
+		   http.Get("http://"+ req.PostFormValue("callback") +"/verify?topic=" + req.PostFormValue("topic") +"&challenge=" + random)
 			}else{
 				response := "BAD REQUEST"
 				out,_ :=json.MarshalIndent(response, "400", "    ")
@@ -57,12 +58,6 @@ func subscribe(w http.ResponseWriter, req *http.Request) {
 				}
 			}
 
-			func verify(w http.ResponseWriter, req *http.Request) {
-				fmt.Println("In subscription server verify method")
-				fmt.Println(req.FormValue("topic"))
-				http.Get("http://localhost:8080/verify_intent?topic=" + req.FormValue("topic") +"&challenge=" + req.FormValue("challenge"))
-			}
-
 			func verify_intent(w http.ResponseWriter, req *http.Request) {
 				fmt.Println("In server verify intent method")
 				fmt.Println(req.FormValue("topic"))
@@ -89,7 +84,7 @@ func subscribe(w http.ResponseWriter, req *http.Request) {
 			}
 			func SubscriptionServer(host string, port int){
 				addr := fmt.Sprintf("%s:%d", host, port)
-				http.HandleFunc("/verify", verify)
+				// http.HandleFunc("/verify", verify)
 				log.Println("[HTTP] Starting Subscriber interface on", addr)
 				err := http.ListenAndServe(":3000", nil)
 				if err != nil {
