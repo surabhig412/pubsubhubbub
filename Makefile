@@ -1,4 +1,2 @@
-pubsubhubbub: main.go assets.go
+pubsubhubbub: main.go 
 	go build
-assets.go: assets/
-	go-bindata -pkg handlers -o handlers/assets.go assets/...
